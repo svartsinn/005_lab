@@ -1,0 +1,19 @@
+HOST = '127.0.0.1'
+PORT = 8080
+CHUNK_SIZE = 1024
+CLIENT_TIMEOUT = 10
+
+
+MAX_LENGTH = 1000
+CLRF = '\r\n'
+OK = 200
+BAD_REQUEST = 400
+NOT_FOUND = 404
+NOT_ALLOWED = 405
+STATUS_CODES = {
+    OK: 'OK',
+    BAD_REQUEST: 'Bad Request',
+    NOT_FOUND: 'Not Found',
+    NOT_ALLOWED: 'Not allowed',
+}
+ALLOWED_METHODS = ['GET', 'HEAD']
