@@ -69,11 +69,10 @@ class SocketResponseHandler:
             self._status = NOT_FOUND
             return
         self._content_type = self.get_content_type()
+        self._content_length = self.get_file_size()
         if request.method == 'HEAD':
-            self._content_length = len(self.get_content())
             return
         self._body = self.get_content()
-        self._content_length = len(self._body)
 
     def build_file_path(self, document_root):
         path = self._request.path
@@ -84,6 +83,9 @@ class SocketResponseHandler:
     def get_content(self):
         with open(self._file_path, 'rb') as file:
             return file.read()
+
+    def get_file_size(self):
+        return os.path.getsize(self._file_path)
 
     def get_content_type(self):
         content_type, encoding = mimetypes.guess_type(self._file_path)

@@ -8,7 +8,7 @@ from constants import *
 from socket_methods import SocketRequestHandler, SocketResponseHandler
 
 
-class SocketServer:
+class Server:
     def __init__(self, root, port):
         self._document_root = root
         self.is_root_document_exist()
@@ -26,7 +26,8 @@ class SocketServer:
         while len(request_bytes) >= expected_size:
             chunk_bytes = client_socket.recv(CHUNK_SIZE)
             request_bytes += chunk_bytes
-            if SocketRequestHandler.is_length_exceeded(request_bytes) or SocketRequestHandler.is_complete(request_bytes):
+            if SocketRequestHandler.is_length_exceeded(request_bytes) or \
+                    SocketRequestHandler.is_complete(request_bytes):
                 break
             expected_size += CHUNK_SIZE
         return SocketRequestHandler(request_bytes)
@@ -34,7 +35,7 @@ class SocketServer:
     def serve_forever(self):
         while True:
             client_socket, address_info = self.sock.accept()
-            # client_socket.settimeout(CLIENT_TIMEOUT)
+            client_socket.settimeout(CLIENT_TIMEOUT)
             with client_socket:
                 request = self.create_request(client_socket)
                 response = SocketResponseHandler(request, self._document_root)
@@ -50,18 +51,17 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-w', '--workers', help='Count of workers', default=1, type=int)
-    parser.add_argument('-r', '--document_root', help='Document root path', default='', type=str)
+    parser.add_argument('-r', '--document_root', help='Document root path', default='.', type=str)
     parser.add_argument('-p', '--port', help='Port', default=PORT, type=int)
     args = parser.parse_args()
 
     workers_count = args.workers if args.workers > 0 else 1
     try:
-        server = SocketServer(args.document_root, args.port)
+        server = Server(args.document_root, args.port)
     except Exception as e:
         logging.error(e)
         exit()
     workers = []
-    worker = Process(target=server.serve_forever)
 
     for _ in range(workers_count):
         worker = Process(target=server.serve_forever)
