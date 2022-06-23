@@ -18,7 +18,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
       - name: Run Python server
-        run: httpd.py
+        run: python httpd.py
       - name: Test with unittest
         run: |
           python -m unittest httptest.py
