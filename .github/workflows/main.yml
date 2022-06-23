@@ -20,7 +20,6 @@ jobs:
       - name: Run Python server
         run: |
           python httpd.py
-        shell: bash
       - name: Test with unittest
         run: |
           python -m unittest httptest.py
